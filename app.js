@@ -44,9 +44,6 @@ connection.connect(function(err) {
 });
 
 
-
-
-
 // web sayfa üzerine formu almak 
 const requestListener=app.get('/', (req, res)=>{
     res.sendFile(path.join(__dirname + '/public'+'/index.html'));
