@@ -3,8 +3,13 @@ const express = require("express");// express modülünü çağıyoruz
 const app = express();//app adında bir değişken bundan sonra expres modülü bu şekilde işlem görecek
 const path = require('path');// dosya yolu
 const mysql = require('mysql');// mysql database çağıralım
-const http = require("http");
+
 //database bağlantı girişi yapalım not:bundan önce mysql ilgili tablo yapılıp username verildi
+
+app.use(express.json());// gönderilen veriyi json parametrelerine çevirmek için
+app.use(express.urlencoded({ extended: true })); // gönderilen veriyi 
+
+
 let connection = mysql.createConnection({ 
    host: 'localhost',
    user: 'aknels',
@@ -15,7 +20,7 @@ let connection = mysql.createConnection({
 //bağlantı gerçekleştikten sonra hata verirse ve gerçekleşirse gelenc msg
 connection.connect(function(err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("Database ile bağlantı kuruldu!");
 
   // web sayfası(istemciden) üzerinden bilgi göndermek(sunucuya/server)  VE consol da göstermek
   app.post("/gonder", (req, res) => {
@@ -39,8 +44,7 @@ connection.connect(function(err) {
 });
 
 
-app.use(express.json());// gönderilen veriyi json parametrelerine çevirmek için
-app.use(express.urlencoded({ extended: true })); // gönderilen veriyi 
+
 
 
 // web sayfa üzerine formu almak 
@@ -50,7 +54,7 @@ const requestListener=app.get('/', (req, res)=>{
 
  
 // web sayafası üzerinde port açmak ve console yollamak
-const server = http.createServer(requestListener);
-server.listen(8000);
- 
-
+app.set('port', (process.env.PORT || 3000));
+app.listen(app.get('port'), function() {
+    console.log('Server started on port '+app.get('port'));
+});
